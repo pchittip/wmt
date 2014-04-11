@@ -21,15 +21,12 @@ train = pd.DataFrame()
 test = pd.DataFrame()
 stores = pd.DataFrame()
 features = pd.DataFrame()
-data_dir = os.getcwd() + "\wmt_learn\data"
+data_dir = os.path.dirname(__file__) + "\data"
 
 datafile_train = data_dir + "\\train.csv"
 datafile_test = data_dir + "\\test.csv"
 datafile_store = data_dir + "\\stores.csv"
 datafile_features = data_dir + "\\features.csv"
-
-#print datafile_train
-
 
 
 
@@ -49,6 +46,8 @@ except IOError:
     wmt_train=pd.read_csv(train_path,
                             parse_dates=['Date']
                             )#,index_col=['Store', 'Dept'])
+    # if we had wrong directory, lets fix that                        
+    #print os.path.dirname(train_path)                        
 ##_______________________________________________________________####    
 ##################################################################### 
 train =  wmt_train     

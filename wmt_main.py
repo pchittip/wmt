@@ -7,7 +7,7 @@ Use historical markdown data to predict store sales
 """
 print(__doc__)
 
-import pandas as ps
+import pandas as pd
 import matplotlib.pyplot as plt
 import wmt_learn
 
@@ -18,4 +18,8 @@ import wmt_learn
 
 
 #wmt_learn.load()
+import os
+#print os.path.realpath(__file__)
+#print os.path.dirname(__file__)
+#print os.path._getfullpathname(__file__)
 
