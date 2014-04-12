@@ -10,45 +10,91 @@ print(__doc__)
 import pandas as pd
 import matplotlib.pyplot as plt
 import wmt_learn
+import numpy as np
 
 
-#reload(wmt_learn)
+print '-'*80
+print "\nTraining Set "
+print wmt_learn.train.head()
+print '-'*80
 
-#raw_input('Hit any key when ready')
+print "\nTest Set "
+print wmt_learn.test.head()
+print '-'*80
 
+print "\nStore Data "
+print wmt_learn.stores.head()
+print '-'*80
 
-#wmt_learn.load()
-import os
-#print os.path.realpath(__file__)
-#print os.path.dirname(__file__)
-#print os.path._getfullpathname(__file__)
+print "\nFeature Data "
+print wmt_learn.features.head()
+print '-'*80
 
-## start by looking at the different store types
-wmt_learn.stores.sort_index(by=['Size'],inplace=True,ascending=False)
+#Data Exploration...
 
+#Feature Matrix 8190 rows x 12 cols
+X_FeatureLabels = wmt_learn.features.columns
+#X = wmt_learn.features.values
 
-plt.close('all')
-fig = plt.figure()
-#fig
-ax1 = fig.add_subplot(111)
-store_sizes=wmt_learn.stores['Size']
+STORES = wmt_learn.stores
 
-wmt_learn.stores.Store.values
-
-bars = ax1.bar(range(1,46), store_sizes, color='blue', edgecolor='black')
-
-#pull out the A stores and make them red
-Astores = wmt_learn.stores[wmt_learn.stores['Type']=='A']
-for store_num in Astores['Store']:
-    bars[store_num-1].set_facecolor('red')
+stype = {'A': 0, 'B': 1, 'C': 2}
 
 
-#pull out the B stores and make them green
-Bstores = wmt_learn.stores[wmt_learn.stores['Type']=='B']
-for store_num in Bstores['Store']:
-    bars[store_num-1].set_facecolor('green')
+#X_store = np.zeros(45)
+#X_type = np.zeros(3)
+#X_size = np.zeros(1)
+#X_dept = np.zeros(98)
+#X_week = np.zeros(52)
+#X_holiday = np.zeros(1)
+
+A=np.zeros(45)
+X=np.identity(45)
+X_Store = np.vstack((A, X[X[:,0] < 45]))
+
+X_Type = np.identity(3)
+
+A=np.zeros(98)
+X=np.identity(98)
+X_Dept = np.vstack((A, X[X[:,0] < 98]))
+
+X_size = np.zeros(1)
+
+A=np.zeros(53)
+X=np.identity(53)
+X_Week = np.vstack((A, X[X[:,0] < 53]))
+
+TRAIN = wmt_learn.train
+
+#for row in TRAIN.index:
+#    print TRAIN.ix[row]
+X_input = []   
+Y_output = [] 
+
+print 'Pre-Processing Data...'
+for row in np.arange(1000):
+    store_num = TRAIN.ix[row].Store
+#    print X_Store[store_num]
+    store_tpe = stype[STORES[STORES.Store==store_num].Type.values[0]]
+#    print X_Type[store_tpe]
+    store_dept = TRAIN.ix[row].Dept
+#    print X_Dept[store_dept]
+#    print X_Week[TRAIN.ix[row].Date.week]
+#    print TRAIN.ix[row].IsHoliday*1.
+    X = np.concatenate([X_Store[store_num],
+                        X_Type[store_tpe],
+                        X_Dept[store_dept],
+                        X_Week[TRAIN.ix[row].Date.week],
+                        [TRAIN.ix[row].IsHoliday*1.]])
+    X_input += [X]
+    Y_output += [TRAIN.ix[row].Weekly_Sales]
 
     
-    
-#plt.xticks(range(1,45))
-plt.show()
+X_input = np.array(X_input)
+Y_output = np.array(Y_output)
+print 'Complete.'
+
+
+
+
+
