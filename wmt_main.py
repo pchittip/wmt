@@ -24,7 +24,7 @@ import os
 #print os.path._getfullpathname(__file__)
 
 ## start by looking at the different store types
-#wmt_learn.stores.sort_index(by=['Size'],inplace=True)
+wmt_learn.stores.sort_index(by=['Size'],inplace=True,ascending=False)
 
 
 plt.close('all')
