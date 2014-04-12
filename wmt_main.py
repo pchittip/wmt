@@ -54,9 +54,9 @@ X_Store = np.vstack((A, X[X[:,0] < 45]))
 
 X_Type = np.identity(3)
 
-A=np.zeros(98)
-X=np.identity(98)
-X_Dept = np.vstack((A, X[X[:,0] < 98]))
+A=np.zeros(99)
+X=np.identity(99)
+X_Dept = np.vstack((A, X[X[:,0] < 99]))
 
 X_size = np.zeros(1)
 
@@ -72,7 +72,7 @@ X_input = []
 Y_output = [] 
 
 print 'Pre-Processing Data...'
-for row in np.arange(1000):
+for row in np.arange(421570):
     store_num = TRAIN.ix[row].Store
 #    print X_Store[store_num]
     store_tpe = stype[STORES[STORES.Store==store_num].Type.values[0]]
@@ -94,7 +94,41 @@ X_input = np.array(X_input)
 Y_output = np.array(Y_output)
 print 'Complete.'
 
+print 'Running Linear Regression...'
+from sklearn.linear_model import LinearRegression
+model = LinearRegression(fit_intercept=True)
+model.fit(X_input,Y_output)
 
+
+TEST = wmt_learn.test
+
+#for row in TRAIN.index:
+#    print TRAIN.ix[row]
+X_test = []   
+
+
+print 'Running Test Data...'
+for row in np.arange(115064):
+    store_num = TEST.ix[row].Store
+#    print X_Store[store_num]
+    store_tpe = stype[STORES[STORES.Store==store_num].Type.values[0]]
+#    print X_Type[store_tpe]
+    store_dept = TEST.ix[row].Dept
+#    print X_Dept[store_dept]
+#    print X_Week[TRAIN.ix[row].Date.week]
+#    print TRAIN.ix[row].IsHoliday*1.
+    X = np.concatenate([X_Store[store_num],
+                        X_Type[store_tpe],
+                        X_Dept[store_dept],
+                        X_Week[TEST.ix[row].Date.week],
+                        [TEST.ix[row].IsHoliday*1.]])
+    X_test += [X]
+    #Y_output += [TRAIN.ix[row].Weekly_Sales]
+
+    
+X_test = np.array(X_test)
+Y_predict = model.predict(X_test)
+print 'Complete.'
 
 
 
