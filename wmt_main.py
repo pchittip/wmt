@@ -37,17 +37,14 @@ X_FeatureLabels = wmt_learn.features.columns
 #X = wmt_learn.features.values
 
 STORES = wmt_learn.stores
+TRAIN = wmt_learn.train
+TEST = wmt_learn.test
 
+# Dictionary for changeing store type into scalar
 stype = {'A': 0, 'B': 1, 'C': 2}
 
 
-#X_store = np.zeros(45)
-#X_type = np.zeros(3)
-#X_size = np.zeros(1)
-#X_dept = np.zeros(98)
-#X_week = np.zeros(52)
-#X_holiday = np.zeros(1)
-
+# Setting up data for input into learning algorithm
 A=np.zeros(45)
 X=np.identity(45)
 X_Store = np.vstack((A, X[X[:,0] < 45]))
@@ -64,7 +61,7 @@ A=np.zeros(53)
 X=np.identity(53)
 X_Week = np.vstack((A, X[X[:,0] < 53]))
 
-TRAIN = wmt_learn.train
+
 
 #for row in TRAIN.index:
 #    print TRAIN.ix[row]
@@ -100,13 +97,13 @@ model = LinearRegression(fit_intercept=True)
 model.fit(X_input,Y_output)
 
 
-TEST = wmt_learn.test
 
-#for row in TRAIN.index:
-#    print TRAIN.ix[row]
+
+print 'Running Test Data through Model...'
 X_test = []   
 
-
+# Re-Arrange data for propper input
+# This can probably be optimized significantly
 print 'Running Test Data...'
 for row in np.arange(115064):
     store_num = TEST.ix[row].Store
